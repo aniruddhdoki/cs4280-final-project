@@ -26,11 +26,8 @@ import java.util.regex.*;
 
 public class course_catalog extends Application {
     private TableView<Course> table = new TableView<Course>();
-    private final ObservableList<Course> data = FXCollections.observableArrayList(
-        for(int k = 0;k < splitData.size();k++){
-          new Course(splitData.get(k));
-        }
-      );
+    static ArrayList<Course> splitData;
+    private final ObservableList<Course> cData = FXCollections.observableArrayList(splitData);
 
     @Override
     @SuppressWarnings("unchecked")
@@ -45,10 +42,9 @@ public class course_catalog extends Application {
         TableColumn courseNameCol = new TableColumn("Course Name");
         TableColumn courseCodeCol = new TableColumn("Course Code");
         TableColumn descripCol = new TableColumn("Description");
-        table.getColumns().addAll(courseCodeCol, courseNameCol, descripCol);
 
         // Creating a filtered list with the data
-        FilteredList<Course> flCourse = new FilteredList(data, p -> true);
+        FilteredList<Course> flCourse = new FilteredList(cData, p -> true);
         table.setItems(flCourse);
         table.getColumns().addAll(courseNameCol, courseCodeCol, descripCol);
         // Adding Choice Box and Search Bar here
@@ -146,9 +142,9 @@ public class course_catalog extends Application {
     }
 
     public static String readFileAsString(String fileName) throws Exception {
-        String data = "";
-        data = new String(Files.readAllBytes(Paths.get(fileName)));
-        return data;
+        String cData = "";
+        cData = new String(Files.readAllBytes(Paths.get(fileName)));
+        return cData;
     }
 
     public static ArrayList<Course> getArray(String data) throws Exception {
@@ -193,10 +189,10 @@ public class course_catalog extends Application {
     }
 
     public static void main(String[] args) throws Exception {
-        String data = readFileAsString("data/data.json");
-        ArrayList<Course> splitData = getArray(data);
-        data = new FXCollections.observableArrayList(splitData);
+        String input = readFileAsString("data/data.json");
+        splitData = getArray(input);
+        ObservableList<Course> data = FXCollections.observableArrayList();
+        data.addAll(splitData);
         launch(args);
-    }
-
-}
+      }
+  }
