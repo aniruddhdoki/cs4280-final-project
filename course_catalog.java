@@ -39,7 +39,6 @@ public class course_catalog extends Application {
         stage.setHeight(500);
         final Label label = new Label("University of North Carolina - Chapel Hill Courses");
         table.setEditable(false);
-        table.prefHeightProperty().bind(stage.heightProperty());
         table.prefWidthProperty().bind(stage.widthProperty());
         TableColumn courseNameCol = new TableColumn("Course Name");
         TableColumn courseCodeCol = new TableColumn("Course Code");
