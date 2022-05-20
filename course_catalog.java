@@ -32,32 +32,34 @@ public class course_catalog extends Application {
     @Override
     @SuppressWarnings("unchecked")
     public void start(Stage stage) {
-        // Creating the the Columns for the ListView
+        // Creating the the Columns for the TableView
         Scene scene = new Scene(new Group());
         stage.setTitle("College Course Catalog");
-        stage.setWidth(500);
+        stage.setWidth(800);
         stage.setHeight(500);
         final Label label = new Label("University of North Carolina - Chapel Hill Courses");
         table.setEditable(false);
         table.prefWidthProperty().bind(stage.widthProperty());
         TableColumn courseNameCol = new TableColumn("Course Name");
+        courseNameCol.setCellValueFactory(new PropertyValueFactory<Course, String>("courseName"));
         TableColumn courseCodeCol = new TableColumn("Course Code");
+        courseCodeCol.setCellValueFactory(new PropertyValueFactory<Course, String>("courseCode"));
         TableColumn descripCol = new TableColumn("Description");
+        descripCol.setCellValueFactory(new PropertyValueFactory<Course, String>("descrip"));
 
-        // Creating a filtered list with the data
+        // Creating a filtered list with cData
         FilteredList<Course> flCourse = new FilteredList(cData, p -> true);
-        table.setItems(flCourse);
         table.getColumns().addAll(courseNameCol, courseCodeCol, descripCol);
-        // Adding Choice Box and Search Bar here
-        // snagged my code from here,
-        // https://stackoverflow.com/questions/47559491/making-a-search-bar-in-javafx
-        // there are certain things that need to be changed before it's functionable
+        table.setItems(flCourse);
+
+        //Choice Box and Search Bar here
         ChoiceBox<String> choiceBox = new ChoiceBox();
         choiceBox.getItems().addAll("Course Name", "Course Code", "Description");
         choiceBox.setValue("Course Name");
-
         TextField searchBar = new TextField();
         searchBar.setPromptText("Search");
+
+        //Allows the searchBar to read the choiceBox values
         searchBar.textProperty().addListener((obs, oldValue, newValue) -> {
             switch (choiceBox.getValue())// Switch choiceBox value
             {
@@ -73,24 +75,23 @@ public class course_catalog extends Application {
             }
         });
 
-        choiceBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {// this resets table and text whenever new choice is selected
+        // Resets table and text whenever new choice is selected
+        choiceBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal != null) {
                 searchBar.setText("");
             }
         });
 
-        HBox hBox = new HBox(choiceBox, searchBar);// Add choiceBox and searchBar to hBox
-        hBox.setAlignment(Pos.CENTER);// Center HBox
+        HBox hBox = new HBox(choiceBox, searchBar);
+        hBox.setAlignment(Pos.CENTER);
         final VBox vbox = new VBox();
         vbox.setSpacing(5);
-        vbox.setPadding(new Insets(10, 0, 0, 10));
+        vbox.setPadding(new Insets(10, 50, 0, 10));
         vbox.getChildren().addAll(label, table, hBox);
 
         ((Group) scene.getRoot()).getChildren().addAll(vbox);
 
         stage.setScene(scene);
-        stage.show();
-
         stage.show();
     }
 
@@ -153,6 +154,7 @@ public class course_catalog extends Application {
       data = data.substring(1, data.length() - 1).toString();
       String[] splitData = data.split("},");
       try {
+        System.out.println("any errors that follow are from the parsing");
         for (String course : splitData) {
           String[] splitCourse = course.split("\",");
           ArrayList<String> args = new ArrayList<>();
@@ -166,7 +168,6 @@ public class course_catalog extends Application {
               if (attribute.charAt(attribute.length() - 1) == '"') {
                 attribute = attribute.substring(0, attribute.length() - 1);
               }
-  
               args.add(attribute);
             }
           } catch (Exception e) {
@@ -174,9 +175,7 @@ public class course_catalog extends Application {
             System.err.println("error occurred during parsing");
           }
           try {
-            for (String arg : args) {
-              output.add(new Course(args.get(2), args.get(1), args.get(4)));
-            }
+            output.add(new Course(args.get(2), args.get(1), args.get(4)));
           } catch (Exception e) {
             System.err.println(e.toString());
             System.err.println("error occurred during course generation");
