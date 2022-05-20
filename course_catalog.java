@@ -34,6 +34,7 @@ public class course_catalog extends Application {
     public void start(Stage stage) {
         // Creating the the Columns for the TableView
         Scene scene = new Scene(new Group());
+
         stage.setTitle("College Course Catalog");
         stage.setWidth(800);
         stage.setHeight(500);
@@ -91,6 +92,7 @@ public class course_catalog extends Application {
 
         ((Group) scene.getRoot()).getChildren().addAll(vbox);
 
+        scene.getStylesheets().add(getClass().getResource("course_catalog.css").toExternalForm());
         stage.setScene(scene);
         stage.show();
     }
